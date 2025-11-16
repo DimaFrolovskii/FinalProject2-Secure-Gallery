@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        /* Контейнер для формы входа */
+        .login-container {
+            max-width: 350px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Стили для новой ссылки */
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div th:if="${param.error}" class="error-message">
+        Неверное имя пользователя или пароль.
+    </div>
+    <div th:if="${param.logout}" class="error-message">
+        Вы вышли из системы.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <h2>Вход в систему</h2>
+        <div><label> Имя пользователя : <input type="text" name="username"/> </label></div>
+        <div><label> Пароль: <input type="password" name="password"/> </label></div>
+        <div><input type="submit" value="Войти"/></div>
+    </form>
+
+    <div class="register-link">
+        <p>Нет аккаунта? <a th:href="@{/register}">Зарегистрироваться</a></p>
+    </div>
+</div>
+
+</body>
+</html>

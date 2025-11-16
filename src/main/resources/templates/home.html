@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Spring Security Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        input[type="submit"] {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<h1>Добро Пожаловать!</h1>
+
+<p>Нажмите <a th:href="@{/index}">СЮДА</a> чтобы увидеть страничку.</p>
+
+<form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

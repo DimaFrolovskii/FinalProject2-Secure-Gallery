@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Защищенная страница</title>
+    <style>
+        /* --- ОСНОВНЫЕ СТИЛИ --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px;
+            background-color: #f7f9fc; /* Светло-голубой фон */
+            color: #343a40;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #007bff; /* Основной синий цвет */
+            border-bottom: 3px solid #e9ecef;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #495057;
+            margin-top: 20px;
+        }
+
+        /* --- СООБЩЕНИЯ --- */
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            background-color: #ffe0e0; /* Светло-красный для ошибок */
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        /* --- ФОРМА ЗАГРУЗКИ --- */
+        /* Применяется к формам Загрузки и Выхода */
+        form {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            background-color: #ffffff;
+            display: inline-flex; /* Для выравнивания элементов */
+            gap: 10px; /* Расстояние между элементами формы */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 10px; /* Отступ от предыдущего элемента */
+        }
+
+        /* Отменяем стили рамки/фона для формы удаления */
+        li form {
+            padding: 0;
+            border: none;
+            background: none;
+            box-shadow: none;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        /* Общие стили для кнопок */
+        input[type="submit"], button {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        /* Стиль для кнопки Загрузить */
+        input[type="submit"][value="Загрузить"] {
+            background-color: #28a745; /* Зеленый цвет успеха */
+        }
+        input[type="submit"][value="Загрузить"]:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+
+        /* --- СПИСОК ИЗОБРАЖЕНИЙ --- */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* Красивая тень */
+            transition: box-shadow 0.3s ease;
+        }
+
+        li:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Информация об авторе */
+        li .author-info {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Имя файла (ссылка) */
+        li a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        /* Изображение */
+        li img {
+            max-width: 300px;
+            max-height: 300px;
+            width: auto;
+            height: auto;
+            border: 3px solid #f8f9fa; /* Рамка */
+            padding: 5px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        /* КНОПКА УДАЛЕНИЯ */
+        li .delete-btn {
+            background: none;
+            color: #dc3545; /* Красный цвет опасности */
+            padding: 5px 10px;
+            border: 1px solid #dc3545;
+        }
+
+        li .delete-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* --- КНОПКА ВЫХОДА/СМЕНЫ АККАУНТА (НОВЫЕ СТИЛИ) --- */
+        .logout-form {
+            /* Отменяем inline-flex и делаем блок, чтобы она была на отдельной строке */
+            display: block;
+            margin-top: 30px;
+            padding: 0; /* Убираем padding формы */
+            border: none;
+            background: none;
+            box-shadow: none;
+        }
+
+        .logout-form button {
+            background-color: #dc3545; /* Красный цвет */
+            padding: 12px 25px; /* Увеличенный размер */
+            font-size: 1.1em;
+            width: auto; /* Автоматическая ширина */
+        }
+
+        .logout-form button:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+<h1>Страница загрузки файлов</h1>
+<p>Вы вошли как <span sec:authentication="name" style="font-weight: bold;">User</span></p>
+
+<div th:if="${message}" class="message">
+    <h4 th:text="${message}">Сообщение</h4>
+</div>
+
+<form method="POST" enctype="multipart/form-data" th:action="@{/upload}">
+    <input type="file" name="file" />
+    <input type="submit" value="Загрузить" />
+</form>
+
+<hr/>
+
+<h3>Загруженные файлы (Все пользователи):</h3>
+
+<div th:if="${imagesInfo.empty}">
+    <p>Нет загруженных файлов.</p>
+</div>
+
+<ul th:if="${not imagesInfo.empty}">
+    <li th:each="info : ${imagesInfo}">
+
+            <span class="author-info"
+                  th:text="${'Автор: ' + info.getUploaderName()}">
+                  Автор: user123
+            </span>
+
+        <a th:href="@{'/images/' + ${info.getFilename()}}"
+           th:text="${info.getFilename()}" target="_blank">
+            имя_файла
+        </a>
+
+        <img th:src="@{'/images/' + ${info.getFilename()}}"
+             style="max-width: 250px; max-height: 250px;">
+
+        <form th:action="@{/delete}" method="post">
+            <input type="hidden" name="filename" th:value="${info.getFilename()}" />
+            <button type="submit" class="delete-btn"
+                    onclick="return confirm('Вы уверены, что хотите удалить этот файл?');">
+                [Удалить]
+            </button>
+        </form>
+
+    </li>
+</ul>
+
+<form th:action="@{/logout}" method="post" class="logout-form">
+    <button type="submit">
+        Нажмите сюда, чтобы выйти или сменить аккаунт
+    </button>
+</form>
+
+</body>
+</html>
